@@ -50,9 +50,12 @@ RUN echo "alias test='php /var/www/artisan test'" >> ~/.bashrc
 RUN echo "alias pint='/var/www/vendor/bin/pint'" >> ~/.bashrc
 RUN echo "alias phpstan='/var/www/vendor/bin/phpstan analyse --memory-limit=2G'" >> ~/.bashrc
 
-# What command to run
-CMD ["php-fpm"]
-
-# Document that we use port 9000
 EXPOSE 9000
+
+COPY ./docker/php/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+CMD ["php-fpm"]
 
