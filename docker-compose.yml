@@ -10,6 +10,9 @@ services:
     environment:
       PHP_IDE_CONFIG: serverName=Docker
     restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9003:9003"
 
   nginx:
     image: nginx:latest

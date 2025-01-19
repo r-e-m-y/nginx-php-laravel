@@ -1,0 +1,7 @@
+services:
+  php:
+    build:
+      args:
+        XDEBUG_ENABLED: 1
+    ports:
+      - "5173:5173"

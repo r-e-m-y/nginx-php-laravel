@@ -34,8 +34,9 @@ RUN docker-php-ext-install \
 # Redis for caching/sessions
 RUN pecl install redis && docker-php-ext-enable redis
 
-# Xdebug for debugging - REMOVE IN PRODUCTION!
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN if [ "$XDEBUG_ENABLED" = "1" ]; then pecl install xdebug \
+    && docker-php-ext-enable xdebug; \
+fi
 
 # Get Composer (PHP package manager)
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -51,8 +52,6 @@ RUN echo "alias artisan='php /var/www/artisan'" >> ~/.bashrc
 RUN echo "alias test='php /var/www/artisan test'" >> ~/.bashrc
 RUN echo "alias pint='/var/www/vendor/bin/pint'" >> ~/.bashrc
 RUN echo "alias phpstan='/var/www/vendor/bin/phpstan analyse --memory-limit=2G'" >> ~/.bashrc
-
-EXPOSE 9000
 
 COPY ./docker/php/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

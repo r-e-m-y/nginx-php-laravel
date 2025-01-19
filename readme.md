@@ -1,0 +1,1 @@
+1. Add `docker-compose.override.yaml` to `.gitignore`
