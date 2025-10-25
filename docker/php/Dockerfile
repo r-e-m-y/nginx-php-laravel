@@ -1,6 +1,16 @@
 # Start with PHP 8.4 FPM (FastCGI Process Manager)
 FROM php:8.4-fpm
 
+# Accept the uid build argument
+ARG uid
+
+# Change www-data's user and group ID to match the host user
+RUN if [ -n "$uid" ]; then \
+    echo "Changing www-data UID to $uid"; \
+    groupmod -o -g $uid www-data; \
+    usermod -o -u $uid -g $uid www-data; \
+fi
+
 # Update package list and install dependencies
 RUN apt-get update && apt-get install -y \
     git \

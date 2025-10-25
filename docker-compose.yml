@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+      args:
+          uid: ${UID:-1000}
     volumes:
       - ./src:/var/www
     networks:
