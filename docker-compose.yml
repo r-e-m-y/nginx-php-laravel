@@ -1,23 +1,27 @@
 services:
   php:
+    container_name: php
     build:
       context: .
       dockerfile: docker/php/Dockerfile
       args:
-          uid: ${UID:-1000}
+        uid: ${UID:-1000}
     volumes:
       - ./src:/var/www
+      - ./docker/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     networks:
-      - app-network
+      - nginx-php
     environment:
       PHP_IDE_CONFIG: serverName=Docker
+      XDEBUG_CONFIG: "client_host=host.docker.internal"
     restart: unless-stopped
     ports:
-      - "9000:9000"
-      - "9003:9003"
+      - "9001:9000"
+      - "5173:5173"
 
   nginx:
     image: nginx:latest
+    container_name: nginx
     ports:
       - "8000:80"
     volumes:
@@ -26,9 +30,36 @@ services:
     depends_on:
       - php
     networks:
-      - app-network
+      - nginx-php
     restart: unless-stopped
 
+  mysql:
+    container_name: db
+    restart: unless-stopped
+    build: docker/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: "nginx-php"
+      MYSQL_USER: "nginx-php"
+      MYSQL_PASSWORD: "1234"
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - nginx-php
+
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+      - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+    networks:
+      - nginx-php
+
+volumes:
+  dbdata:
+
 networks:
-  app-network:
+  nginx-php:
     driver: bridge
