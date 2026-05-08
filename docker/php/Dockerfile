@@ -1,5 +1,5 @@
 # Start with PHP 8.4 FPM (FastCGI Process Manager)
-FROM php:8.4-fpm
+FROM php:8.5-fpm
 
 # Accept the uid build argument
 ARG uid
