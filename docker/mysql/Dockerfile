@@ -1,4 +1,4 @@
-FROM yobasystems/alpine-mariadb:10.6.10
+FROM yobasystems/alpine-mariadb:11.4.9
 
 RUN apk add --update --no-cache tzdata \
     && cp /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime \
