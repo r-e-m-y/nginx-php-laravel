@@ -16,6 +16,7 @@
 3. Change the `.env.example` to set the correct database and network
 4. Run `docker-compose up --build -d` to start the containers
 5. Run `docker compose exec -it php bash` followed by `artisan migrate` to run the basic migrations
+6. While in the container, run `npm install
 
 ### Development
 1. To start the frontend asset: `docker compose exec -it php bash npm run dev`
